@@ -36,4 +36,7 @@ public class ShoppingListModel {
         this.element = element;
         this.status = status;
     }
+    public ShoppingListModel() {
+        // Constructeur vide pour l’usage en base de données
+    }
 }
