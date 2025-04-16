@@ -91,7 +91,7 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.MyViewHolder  
     {
         ShoppingListModel elem = mList.get(position);
         Bundle bundle = new Bundle();
-        bundle.putInt("id", elem.getId());
+        bundle.putInt("ID", elem.getId());
         bundle.putString("element", elem.getElement());
 
         AddNewElem addNewElem = new AddNewElem();
