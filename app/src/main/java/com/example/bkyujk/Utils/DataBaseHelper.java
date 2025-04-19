@@ -9,6 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.example.bkyujk.Model.ShoppingListModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
@@ -37,7 +40,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(db);
     }
@@ -48,7 +50,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         contentValues.put(COL_2, model.getElement());
         contentValues.put(COL_3, 0);
         contentValues.put(COL_4, model.getCategory());
-
         db.insert(TABLE_NAME, null, contentValues);
     }
 
@@ -56,7 +57,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_2, element);
-
         db.update(TABLE_NAME, contentValues, "ID=?", new String[]{String.valueOf(id)});
     }
 
@@ -64,7 +64,6 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(COL_3, status);
-
         db.update(TABLE_NAME, contentValues, "ID=?", new String[]{String.valueOf(id)});
     }
 
@@ -80,7 +79,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
         db.beginTransaction();
         try {
-            cursor = db.query(TABLE_NAME, null, null, null, null, null, "CATEGORY ASC, ELEMENT ASC"); // 🆕 Tri par CATEGORY puis ELEMENT
+            cursor = db.query(TABLE_NAME, null, null, null, null, null, null); // pas de tri SQL ici
             if (cursor != null) {
                 if (cursor.moveToFirst()) {
                     do {
@@ -88,7 +87,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                         shoppingListModel.setId(cursor.getInt(cursor.getColumnIndexOrThrow(COL_1)));
                         shoppingListModel.setElement(cursor.getString(cursor.getColumnIndexOrThrow(COL_2)));
                         shoppingListModel.setStatus(cursor.getInt(cursor.getColumnIndexOrThrow(COL_3)));
-                        shoppingListModel.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(COL_4))); // 🆕 Récupère CATEGORY
+                        shoppingListModel.setCategory(cursor.getString(cursor.getColumnIndexOrThrow(COL_4)));
                         shoppingList.add(shoppingListModel);
                     } while (cursor.moveToNext());
                 }
@@ -97,6 +96,39 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             db.endTransaction();
             if (cursor != null) cursor.close();
         }
+
+        // si une new category est cree, a le rajouter ici (l'ordre est important)
+        List<String> categoryOrder = Arrays.asList(
+                "Fruits",
+                "Vegetables",
+                "Meats",
+                "Dairy",
+                "Grocery",
+                "Frozen",
+                "maintenance",
+                "Personal Care",
+                "Autres"
+        );
+
+        Collections.sort(shoppingList, new Comparator<ShoppingListModel>() {
+            @Override
+            public int compare(ShoppingListModel o1, ShoppingListModel o2) {
+                int index1 = categoryOrder.indexOf(o1.getCategory());
+                int index2 = categoryOrder.indexOf(o2.getCategory());
+
+                if (index1 == -1) index1 = categoryOrder.size();
+                if (index2 == -1) index2 = categoryOrder.size();
+
+                if (index1 != index2) {
+                    return Integer.compare(index1, index2);
+                } else {
+                    return o1.getElement().compareToIgnoreCase(o2.getElement());
+                }
+            }
+        });
+
+        Collections.reverse(shoppingList);
+
         return shoppingList;
     }
 }

@@ -178,6 +178,9 @@ public class Category {
         categoryMap.put("oats", "Grocery");
         categoryMap.put("granola", "Grocery");
 
+        // Grocery / Dry Goods
+        categoryMap.put("ice cream", "Frozen");
+
 
     }
 
