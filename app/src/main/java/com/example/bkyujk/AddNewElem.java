@@ -17,8 +17,10 @@ import androidx.annotation.Nullable;
 
 import com.example.bkyujk.Model.ShoppingListModel;
 import com.example.bkyujk.Utils.DataBaseHelper;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+// 🆕 Ajoute l'import pour utiliser Category
+import com.example.bkyujk.Category;
 
 public class AddNewElem extends BottomSheetDialogFragment {
 
@@ -46,7 +48,6 @@ public class AddNewElem extends BottomSheetDialogFragment {
         mEditText = view.findViewById(R.id.editText);
         mSaveButton = view.findViewById(R.id.addButton);
 
-
         myDB = new DataBaseHelper(getActivity());
 
         boolean isUpdate = false;
@@ -61,11 +62,10 @@ public class AddNewElem extends BottomSheetDialogFragment {
                 mSaveButton.setEnabled(false);
             }
         }
+
         mEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -75,25 +75,29 @@ public class AddNewElem extends BottomSheetDialogFragment {
                 } else {
                     mSaveButton.setEnabled(true);
                 }
-
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
+
         boolean finalIsUpdate = isUpdate;
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String text = mEditText.getText().toString();
+
                 if (finalIsUpdate) {
                     myDB.updateElement(bundle.getInt("ID"), text);
                 } else {
                     ShoppingListModel elem = new ShoppingListModel();
                     elem.setElement(text);
                     elem.setStatus(0);
+
+
+                    String category = Category.getCategoryForItem(text);
+                    elem.setCategory(category);
+
                     myDB.insertElement(elem);
                 }
                 dismiss();
@@ -105,7 +109,7 @@ public class AddNewElem extends BottomSheetDialogFragment {
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
         Activity activity = getActivity();
-        if (activity instanceof OnDialogCloseListener){
+        if (activity instanceof OnDialogCloseListener) {
             ((OnDialogCloseListener) activity).onDialogClose(dialog);
         }
     }
