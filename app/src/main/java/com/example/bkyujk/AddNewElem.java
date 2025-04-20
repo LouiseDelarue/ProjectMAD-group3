@@ -19,8 +19,7 @@ import com.example.bkyujk.Model.ShoppingListModel;
 import com.example.bkyujk.Utils.DataBaseHelper;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-// 🆕 Ajoute l'import pour utiliser Category
-import com.example.bkyujk.Category;
+import com.example.bkyujk.Category; // Import pour Category
 
 public class AddNewElem extends BottomSheetDialogFragment {
 
@@ -69,7 +68,7 @@ public class AddNewElem extends BottomSheetDialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.toString().equals("")) {
+                if (s.toString().trim().isEmpty()) {
                     mSaveButton.setEnabled(false);
                     mSaveButton.setBackgroundColor(Color.GRAY);
                 } else {
@@ -85,7 +84,10 @@ public class AddNewElem extends BottomSheetDialogFragment {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = mEditText.getText().toString();
+                String text = mEditText.getText().toString().trim();
+
+
+                text = capitalizeFirstLetter(text);
 
                 if (finalIsUpdate) {
                     myDB.updateElement(bundle.getInt("ID"), text);
@@ -112,5 +114,13 @@ public class AddNewElem extends BottomSheetDialogFragment {
         if (activity instanceof OnDialogCloseListener) {
             ((OnDialogCloseListener) activity).onDialogClose(dialog);
         }
+    }
+
+
+    private String capitalizeFirstLetter(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }
 }
