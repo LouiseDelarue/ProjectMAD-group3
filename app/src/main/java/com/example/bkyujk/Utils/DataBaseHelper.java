@@ -97,7 +97,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
             if (cursor != null) cursor.close();
         }
 
-        // si une new category est cree, a le rajouter ici (l'ordre est important)
+        // si une new category est cree, le rajouter ici (l'ordre est important)
         List<String> categoryOrder = Arrays.asList(
                 "Fruits",
                 "Vegetables",

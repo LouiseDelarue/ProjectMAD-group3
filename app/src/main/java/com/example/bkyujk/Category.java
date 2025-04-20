@@ -27,7 +27,7 @@ public class Category {
         addMapping("currant", "Fruits");
         addMapping("cranberry", "Fruits");
         addMapping("redcurrant", "Fruits");
-        addMapping("blackcurrent", "Fruits");
+        addMapping("blackcurrant", "Fruits");
         addMapping("blueberry", "Fruits");
         addMapping("blackberry", "Fruits");
         addMapping("citruses", "Fruits");
@@ -41,6 +41,11 @@ public class Category {
         addMapping("yuzu", "Fruits");
         addMapping("mango", "Fruits");
         addMapping("lychee", "Fruits");
+        addMapping("pomegranate", "Fruits");
+        addMapping("fig", "Fruits");
+        addMapping("passion fruit", "Fruits");
+        addMapping("coconut", "Fruits");
+        addMapping("avocado", "Fruits");
 
         // Vegetables
         addMapping("carrot", "Vegetables");
@@ -67,9 +72,14 @@ public class Category {
         addMapping("pumpkin", "Vegetables");
         addMapping("sweet potato", "Vegetables");
         addMapping("leek", "Vegetables");
+        addMapping("asparagus", "Vegetables");
+        addMapping("artichoke", "Vegetables");
+        addMapping("brussels sprouts", "Vegetables");
+        addMapping("kale", "Vegetables");
+        addMapping("arugula", "Vegetables");
 
         // Meats
-        addMapping("chiken", "Meats");
+        addMapping("chicken", "Meats");
         addMapping("beef", "Meats");
         addMapping("pork", "Meats");
         addMapping("turkey", "Meats");
@@ -81,9 +91,24 @@ public class Category {
         addMapping("sausage", "Meats");
         addMapping("salami", "Meats");
         addMapping("meatball", "Meats");
-        addMapping("chiken breast", "Meats");
-        addMapping("chiken thigh", "Meats");
-        addMapping("chiken wings", "Meats");
+        addMapping("chicken breast", "Meats");
+        addMapping("chicken thigh", "Meats");
+        addMapping("chicken wings", "Meats");
+        addMapping("veal", "Meats");
+        addMapping("goat", "Meats");
+        addMapping("ground beef", "Meats");
+        addMapping("roast beef", "Meats");
+        addMapping("oxtail", "Meats");
+        addMapping("liver", "Meats");
+        addMapping("lardons", "Meats");
+        addMapping("fish", "Meats");
+        addMapping("salmon", "Meats");
+        addMapping("tuna", "Meats");
+        addMapping("sardine", "Meats");
+        addMapping("Shrimp", "Meats");
+        addMapping("crab", "Meats");
+        addMapping("lobster", "Meats");
+
 
         // Maintenance
         addMapping("dish soap", "maintenance");
@@ -92,8 +117,8 @@ public class Category {
         addMapping("multi-surface cleaner", "maintenance");
         addMapping("glass cleaner", "maintenance");
         addMapping("floor cleaner", "maintenance");
-        addMapping("bathroom claener", "maintenance");
-        addMapping("toilet bowl cleander", "maintenance");
+        addMapping("bathroom cleaner", "maintenance");
+        addMapping("toilet bowl cleaner", "maintenance");
         addMapping("degreaser", "maintenance");
         addMapping("disinfectant", "maintenance");
         addMapping("oven cleaner", "maintenance");
@@ -114,6 +139,9 @@ public class Category {
         addMapping("toilet brush", "maintenance");
         addMapping("toilet paper", "maintenance");
         addMapping("paper towel", "maintenance");
+        addMapping("descaler", "maintenance");
+        addMapping("insecticide", "maintenance");
+        addMapping("fabric refresher", "maintenance");
 
         // Personal Care
         addMapping("shower gel", "Personal Care");
@@ -144,8 +172,12 @@ public class Category {
         addMapping("body scrub", "Personal Care");
         addMapping("face mask", "Personal Care");
         addMapping("hair mask", "Personal Care");
+        addMapping("baby shampoo", "Personal Care");
+        addMapping("baby wipes", "Personal Care");
+        addMapping("menstrual cup", "Personal Care");
+        addMapping("beard oil", "Personal Care");
 
-        // Dairy
+        // Dairy  (fresh products)
         addMapping("milk", "Dairy");
         addMapping("butter", "Dairy");
         addMapping("cream", "Dairy");
@@ -159,8 +191,18 @@ public class Category {
         addMapping("camembert", "Dairy");
         addMapping("emmental", "Dairy");
         addMapping("parmesan", "Dairy");
+        addMapping("pizza", "Dairy");
+        addMapping("feta", "Dairy");
+        addMapping("ricotta", "Dairy");
+        addMapping("cream cheese", "Dairy");
+        addMapping("blue cheese", "Dairy");
+        addMapping("liquid cream", "Dairy");
+        addMapping("yogurt drink", "Dairy");
+        addMapping("kefir", "Dairy");
+        addMapping("egg", "Dairy");
+        addMapping("eggs", "Dairy");
 
-        // Grocery
+        // Grocery (dry products)
         addMapping("rice", "Grocery");
         addMapping("pasta", "Grocery");
         addMapping("spaghetti", "Grocery");
@@ -176,9 +218,52 @@ public class Category {
         addMapping("cereal", "Grocery");
         addMapping("oats", "Grocery");
         addMapping("granola", "Grocery");
+        addMapping("chocolate", "Grocery");
+        addMapping("candy", "Grocery");
+        addMapping("snack", "Grocery");
+        addMapping("chips", "Grocery");
+        addMapping("nuts", "Grocery");
+        addMapping("dried fruit", "Grocery");
+        addMapping("popcorn", "Grocery");
+        addMapping("honey", "Grocery");
+        addMapping("peanut butter", "Grocery");
+        addMapping("jam", "Grocery");
+        addMapping("oil", "Grocery");
+        addMapping("vine", "Grocery");
+        addMapping("olive oil", "Grocery");
+        addMapping("vinegar", "Grocery");
+        addMapping("tea", "Grocery");
+        addMapping("coffee", "Grocery");
+        addMapping("canned food", "Grocery");
+        addMapping("canned tuna", "Grocery");
+        addMapping("tomato sauce", "Grocery");
+        addMapping("mustard", "Grocery");
+        addMapping("ketchup", "Grocery");
+        addMapping("mayonnaise", "Grocery");
+        addMapping("spices", "Grocery");
+        addMapping("herbs", "Grocery");
+        addMapping("syrup", "Grocery");
+        addMapping("baking powder", "Grocery");
+        addMapping("baking soda", "Grocery");
+        addMapping("bagel", "Grocery");
+        addMapping("tortilla chips", "Grocery");
+        addMapping("pita bread", "Grocery");
+        addMapping("crackers", "Grocery");
+        addMapping("couscous", "Grocery");
+        addMapping("quinoa", "Grocery");
+        addMapping("croissant", "Grocery");
+        addMapping("chocolatine", "Grocery");
+        addMapping("donut", "Grocery");
+        addMapping("cookies", "Grocery");
 
         // Frozen
         addMapping("ice cream", "Frozen");
+        addMapping("frozen vegetables", "Frozen");
+        addMapping("frozen fruits", "Frozen");
+        addMapping("frozen pizza", "Frozen");
+        addMapping("frozen fish", "Frozen");
+        addMapping("frozen fries", "Frozen");
+        addMapping("frozen desserts", "Frozen");
     }
 
     private static void addMapping(String itemName, String category) {
