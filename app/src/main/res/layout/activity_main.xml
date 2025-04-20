@@ -23,11 +23,11 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_marginTop="10dp"
-        android:layout_width="match_parent"
+                            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="true"
-        android:layout_below="@+id/textView" />
+            android:nestedScrollingEnabled="true"
+                                                                                                                                                                                                                    android:layout_below="@+id/textView" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addButton"
@@ -38,5 +38,16 @@
         android:layout_margin="20dp"
         android:src="@drawable/add"
         android:backgroundTint="#00BCD4"/>
+
+    <!-- budget btn -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/budgetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/ic_budget"
+        android:backgroundTint="#F0EC0C" />
 
 </RelativeLayout>

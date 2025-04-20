@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
     RecyclerView recyclerView;
     FloatingActionButton addButton;
+    FloatingActionButton budgetButton;
     DataBaseHelper myDB;
     private List<ShoppingListModel> mList;
     private ToDoAdapter adapter;
@@ -44,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
         recyclerView = findViewById(R.id.recyclerView);
         addButton = findViewById(R.id.addButton);
+        budgetButton = findViewById(R.id.budgetButton);
+
         myDB = new DataBaseHelper(MainActivity.this);
         mList = new ArrayList<>();
         adapter = new ToDoAdapter(myDB, MainActivity.this);
@@ -64,6 +67,12 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                 AddNewElem.newInstance().show(getSupportFragmentManager(), AddNewElem.TAG);
             }
         });
+        budgetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBudgetDialog();
+            }
+        });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerViewTouchHelper(adapter));
         itemTouchHelper.attachToRecyclerView(recyclerView);
@@ -75,5 +84,28 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         Collections.reverse(mList);
         adapter.setElements(mList);
         adapter.notifyDataSetChanged();
+    }
+
+    private void showBudgetDialog() {
+        final android.widget.EditText input = new android.widget.EditText(this);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Set Budget")
+                .setMessage("Enter the budget you want to allocate:")
+                .setView(input)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        String value = input.getText().toString();
+                        if (!value.isEmpty()) {
+                            double budget = Double.parseDouble(value);
+                            android.widget.Toast.makeText(
+                                    MainActivity.this,
+                                    "Budget set to " + budget + "€", android.widget.Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 }
