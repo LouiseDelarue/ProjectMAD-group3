@@ -3,6 +3,7 @@ package com.example.bkyujk;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
     FloatingActionButton addButton;
     FloatingActionButton budgetButton;
     DataBaseHelper myDB;
+    TextView budgetText;
     private List<ShoppingListModel> mList;
     private ToDoAdapter adapter;
 
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         recyclerView = findViewById(R.id.recyclerView);
         addButton = findViewById(R.id.addButton);
         budgetButton = findViewById(R.id.budgetButton);
+        budgetText = findViewById(R.id.BudgetText);
 
         myDB = new DataBaseHelper(MainActivity.this);
         mList = new ArrayList<>();
@@ -58,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         mList = myDB.getAllElements();
         Collections.reverse(mList);
         adapter.setElements(mList);
-
 
 
         addButton.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
     private void showBudgetDialog() {
         final android.widget.EditText input = new android.widget.EditText(this);
-        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER
+                         | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         new androidx.appcompat.app.AlertDialog.Builder(this)
                 .setTitle("Set Budget")
@@ -99,9 +102,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                         String value = input.getText().toString();
                         if (!value.isEmpty()) {
                             double budget = Double.parseDouble(value);
-                            android.widget.Toast.makeText(
-                                    MainActivity.this,
-                                    "Budget set to " + budget + "€", android.widget.Toast.LENGTH_SHORT).show();
+                            budgetText.setText("Budget: " + budget + "€");
                         }
                     }
                 })
