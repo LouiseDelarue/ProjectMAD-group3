@@ -2,10 +2,15 @@ package com.example.bkyujk;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -28,9 +33,8 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
     RecyclerView recyclerView;
     FloatingActionButton addButton;
-    FloatingActionButton budgetButton;
     DataBaseHelper myDB;
-    TextView budgetText;
+
     private List<ShoppingListModel> mList;
     private ToDoAdapter adapter;
 
@@ -39,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        RelativeLayout budgetContainer = findViewById(R.id.budgetContainer);
+        TextView value1 = findViewById(R.id.value1);
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -47,8 +54,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
         recyclerView = findViewById(R.id.recyclerView);
         addButton = findViewById(R.id.addButton);
-        budgetButton = findViewById(R.id.budgetButton);
-        budgetText = findViewById(R.id.BudgetText);
+
 
         myDB = new DataBaseHelper(MainActivity.this);
         mList = new ArrayList<>();
@@ -69,11 +75,32 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                 AddNewElem.newInstance().show(getSupportFragmentManager(), AddNewElem.TAG);
             }
         });
-        budgetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showBudgetDialog();
-            }
+
+        budgetContainer.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Enter your budget");
+
+            final EditText input = new EditText(MainActivity.this);
+            input.setInputType(
+                    InputType.TYPE_CLASS_NUMBER |
+                    InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            builder.setView(input);
+
+            builder.setPositiveButton("OK", (dialog, which) -> {
+                String enteredValue = input.getText().toString();
+                try {
+                    double budget = Double.parseDouble(enteredValue);
+                    if (budget>0) {
+                        value1.setText(enteredValue);
+                    } else {
+                        Toast.makeText(MainActivity.this, "PLease enter a value greater than 0.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (NumberFormatException e) {
+                    Toast.makeText(MainActivity.this, "invalid number", Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            builder.show();
         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerViewTouchHelper(adapter));
@@ -86,27 +113,5 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         Collections.reverse(mList);
         adapter.setElements(mList);
         adapter.notifyDataSetChanged();
-    }
-
-    private void showBudgetDialog() {
-        final android.widget.EditText input = new android.widget.EditText(this);
-        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER
-                         | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
-        new androidx.appcompat.app.AlertDialog.Builder(this)
-                .setTitle("Set Budget")
-                .setMessage("Enter the budget you want to allocate:")
-                .setView(input)
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        String value = input.getText().toString();
-                        if (!value.isEmpty()) {
-                            double budget = Double.parseDouble(value);
-                            budgetText.setText("Budget: " + budget + "€");
-                        }
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
     }
 }
