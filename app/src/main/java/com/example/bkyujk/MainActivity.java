@@ -1,6 +1,7 @@
 package com.example.bkyujk;
 
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -42,9 +43,18 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
         setContentView(R.layout.activity_main);
+
         RelativeLayout budgetContainer = findViewById(R.id.budgetContainer);
+
         TextView value1 = findViewById(R.id.value1);
+
+        SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
+        String saveBudget = prefs.getString("budget", null);
+        if (saveBudget != null) {
+            value1.setText((saveBudget));
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -88,10 +98,13 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
             builder.setPositiveButton("OK", (dialog, which) -> {
                 String enteredValue = input.getText().toString();
-                try {
+                try { //verif si budget >0
                     double budget = Double.parseDouble(enteredValue);
                     if (budget>0) {
                         value1.setText(enteredValue);
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.putString("budget", enteredValue);
+                        editor.apply();;
                     } else {
                         Toast.makeText(MainActivity.this, "PLease enter a value greater than 0.", Toast.LENGTH_SHORT).show();
                     }
