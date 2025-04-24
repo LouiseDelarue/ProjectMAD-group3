@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         setContentView(R.layout.activity_main);
 
         RelativeLayout budgetContainer = findViewById(R.id.budgetContainer);
+        RelativeLayout expensesContainer = findViewById(R.id.enpensesContainer);
 
         TextView value1 = findViewById(R.id.value1);
 
@@ -86,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
             }
         });
 
+        // Edit budget
         budgetContainer.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("Enter your budget");
@@ -114,6 +116,13 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
             });
             builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
             builder.show();
+        });
+
+        // Edit expenses
+        expensesContainer.setOnClickListener(v -> {
+            String message = "Expenses Detail";
+
+            ExpensesDialog.newInstance(message).show(getSupportFragmentManager(), "ExpensesDialog");
         });
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerViewTouchHelper(adapter));
