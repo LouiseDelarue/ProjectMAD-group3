@@ -5,6 +5,7 @@ public class ShoppingListModel {
     private String element;
     private int id, status;
     private String category;
+    private double price;
     public String getElement() {
         return element;
     }
@@ -13,7 +14,13 @@ public class ShoppingListModel {
         this.element = element;
     }
 
+    public double getPrice(){
+        return price;
+    }
 
+    public void setPrice() {
+        this.price = price;
+    }
 
     public int getId() {
         return id;
@@ -35,11 +42,12 @@ public class ShoppingListModel {
 
     public void setCategory(String category) { this.category = category; }
 
-    public ShoppingListModel(int id, String element, int status, String category) {
+    public ShoppingListModel(int id, String element, int status, String category, double price) {
         this.id = id;
         this.element = element;
         this.status = status;
         this.category = category;
+        this.price = price;
     }
     public ShoppingListModel() {
         // Constructeur vide pour l’usage en base de données
