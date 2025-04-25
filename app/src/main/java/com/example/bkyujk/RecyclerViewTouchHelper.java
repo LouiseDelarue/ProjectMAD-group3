@@ -16,11 +16,13 @@ import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator
 public class RecyclerViewTouchHelper extends ItemTouchHelper.SimpleCallback {
 
     ToDoAdapter adapter;
+    private final MainActivity activity;
 
 
-    public RecyclerViewTouchHelper(ToDoAdapter adapter) {
+    public RecyclerViewTouchHelper(ToDoAdapter adapter, MainActivity activity) {
         super(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT);
         this.adapter = adapter;
+        this.activity = activity;
     }
 
     @Override
@@ -39,6 +41,7 @@ public class RecyclerViewTouchHelper extends ItemTouchHelper.SimpleCallback {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     adapter.deleteElement(position);
+                    activity.refreshUI();
                 }
             });
             builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

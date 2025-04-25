@@ -96,7 +96,6 @@ public class AddNewElem extends BottomSheetDialogFragment {
                     elem.setElement(text);
                     elem.setStatus(0);
 
-
                     String category = Category.getCategoryForItem(text);
                     elem.setCategory(category);
 

@@ -25,6 +25,8 @@ import com.example.bkyujk.Model.ShoppingListModel;
 import com.example.bkyujk.Utils.DataBaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
     private List<ShoppingListModel> mList;
     private ToDoAdapter adapter;
+    private TextView value2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         RelativeLayout expensesContainer = findViewById(R.id.enpensesContainer);
 
         TextView value1 = findViewById(R.id.value1);
+
 
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
         String saveBudget = prefs.getString("budget", null);
@@ -70,6 +74,9 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         myDB = new DataBaseHelper(MainActivity.this);
         mList = new ArrayList<>();
         adapter = new ToDoAdapter(myDB, MainActivity.this);
+
+        value2 = findViewById(R.id.value2);
+        updateExpenses(value2);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -106,7 +113,8 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                         value1.setText(enteredValue);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("budget", enteredValue);
-                        editor.apply();;
+                        editor.apply();
+                        andrewTate();
                     } else {
                         Toast.makeText(MainActivity.this, "PLease enter a value greater than 0.", Toast.LENGTH_SHORT).show();
                     }
@@ -125,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
             ExpensesDialog.newInstance(message).show(getSupportFragmentManager(), "ExpensesDialog");
         });
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerViewTouchHelper(adapter));
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new RecyclerViewTouchHelper(adapter, this));
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
@@ -135,5 +143,50 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         Collections.reverse(mList);
         adapter.setElements(mList);
         adapter.notifyDataSetChanged();
+        updateExpenses(value2);
+    }
+
+    public void updateExpenses(TextView value2) {
+        List<ShoppingListModel> list = myDB.getAllElements();
+        double total = 0.0;
+        for (ShoppingListModel item : list) {
+            total += Category.getPriceForItem(item.getElement());
+        }
+        value2.setText(String.format("%.2f", total));
+        andrewTate();
+    }
+
+    public void refreshUI() {
+        mList = myDB.getAllElements();
+        Collections.reverse(mList);
+        adapter.setElements(mList);
+        adapter.notifyDataSetChanged();
+        updateExpenses(value2);
+    }
+
+    private void andrewTate() { // expenses become red if poor budget
+        TextView value1 = findViewById(R.id.value1);
+        TextView value2 = findViewById(R.id.value2);
+
+        try {
+            double budget = Double.parseDouble(value1.getText().toString().replace("euro", "").trim());
+            double expenses = Double.parseDouble(value2.getText().toString().replace("euro", "").trim());
+
+            if (expenses > budget) {
+                value2.setTextColor(getResources().getColor(android.R.color.holo_red_light));
+            } else {
+                value2.setTextColor(getResources().getColor(android.R.color.black));
+            }
+        } catch (NumberFormatException e) {
+            value2.setTextColor(getResources().getColor(android.R.color.black));
+        }
     }
 }
+
+
+
+
+
+
+
+

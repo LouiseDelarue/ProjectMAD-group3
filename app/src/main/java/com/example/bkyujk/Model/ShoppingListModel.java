@@ -18,7 +18,7 @@ public class ShoppingListModel {
         return price;
     }
 
-    public void setPrice() {
+    public void setPrice(double price) {
         this.price = price;
     }
 
