@@ -1,16 +1,19 @@
 package com.example.bkyujk;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -84,10 +87,10 @@ public class AddNewElem extends BottomSheetDialogFragment {
         mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = mEditText.getText().toString().trim();
+                String rawText = mEditText.getText().toString().trim();
 
 
-                text = capitalizeFirstLetter(text);
+                final String text = capitalizeFirstLetter(rawText);
 
                 if (finalIsUpdate) {
                     myDB.updateElement(bundle.getInt("ID"), text);
@@ -97,11 +100,38 @@ public class AddNewElem extends BottomSheetDialogFragment {
                     elem.setStatus(0);
 
                     String category = Category.getCategoryForItem(text);
-                    elem.setCategory(category);
+                    if (category.equals("Autres")) {
+                        // then ask the price
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("What's the price fo it?");
 
-                    myDB.insertElement(elem);
+                        final EditText input = new EditText(getContext());
+                        input.setInputType(
+                                InputType.TYPE_CLASS_NUMBER |
+                                InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                        builder.setView(input);
+
+                        builder.setPositiveButton("OK", (dialog, which) -> {
+                            try {
+                                double price = Double.parseDouble(input.getText().toString());
+                                //save
+                                Category.OQTF(text, price);
+
+                                elem.setCategory("Autres");
+                                myDB.insertElement(elem);
+                                dismiss();
+                            } catch (NumberFormatException e) {
+                                Toast.makeText(getContext(), "Invalid number", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                        builder.show();
+                    } else {
+                        elem.setCategory(category);
+                        myDB.insertElement(elem);
+                        dismiss();
+                    }
                 }
-                dismiss();
             }
         });
     }

@@ -285,4 +285,10 @@ public class Category {
         Double price = priceMap.get(itemName.toLowerCase());
         return price != null ? price : 0.0;
     }
+
+    public static void OQTF(String etranger, double price) {
+        String key = etranger.toLowerCase();
+        categoryMap.put(key, "Autres");
+        priceMap.put(key, price);
+    }
 }
