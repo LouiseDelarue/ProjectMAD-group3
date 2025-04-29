@@ -2,6 +2,7 @@ package com.example.bkyujk;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class Category {
     private static final Map<String, String> categoryMap = new HashMap<>();
@@ -290,5 +291,10 @@ public class Category {
         String key = etranger.toLowerCase();
         categoryMap.put(key, "Autres");
         priceMap.put(key, price);
+    }
+
+    // get all products helps autoCompletion
+    public static Set<String> GAA_hurling() {
+        return categoryMap.keySet();
     }
 }

@@ -11,6 +11,8 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -24,10 +26,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import com.example.bkyujk.Category; // Import pour Category
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AddNewElem extends BottomSheetDialogFragment {
 
     public static final String TAG = "AddNewElem";
-    private EditText mEditText;
+    private AutoCompleteTextView mEditText;
     private Button mSaveButton;
 
     private DataBaseHelper myDB;
@@ -47,10 +52,16 @@ public class AddNewElem extends BottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mEditText = view.findViewById(R.id.editText);
+        mEditText = (AutoCompleteTextView) view.findViewById(R.id.editText);
         mSaveButton = view.findViewById(R.id.addButton);
 
         myDB = new DataBaseHelper(getActivity());
+
+        // list all products to autocompletion
+        List<String> allProducts = new ArrayList<>(Category.GAA_hurling());
+        ArrayAdapter<String> adapterAuto = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, allProducts);
+        mEditText.setAdapter(adapterAuto);
+        mEditText.setThreshold(1);
 
         boolean isUpdate = false;
 

@@ -177,9 +177,9 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                 String message = String.format("Please add %.2f€ to your budget.", expenses-budget);
                 // please add XX euro
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Budget exceeded sale pauvre (il est 3h du sbar nigger")
+                        .setTitle("Budget exceeded")
                         .setMessage(message)
-                        .setPositiveButton("Payer en nature", (dialog, which) -> dialog.dismiss())
+                        .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
             } else {
                 value2.setTextColor(getResources().getColor(android.R.color.black));
