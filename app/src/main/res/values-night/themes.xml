@@ -4,4 +4,10 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+
+    <style name="Theme.Bkyujk" parent="Base.Theme.Bkyujk" />
+
+    <style name="ScreenBackground"><item name="background">@color/black</item></style>
+    <style name="CardBackground"><item name="background">@color/darkGrey</item></style>
+    <style name="TextColor"><item name="android:textColor">@color/grey</item></style>
 </resources>
