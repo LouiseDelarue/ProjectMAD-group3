@@ -8,54 +8,17 @@
     android:background="#E8E8E8"
     tools:context=".MainActivity">
 
+    <!-- Titre principal -->
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SmartBasket"
-        android:layout_centerHorizontal = "true"
+        android:layout_centerHorizontal="true"
         android:textSize="25sp"
-        android:textStyle="bold"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="true"
-        android:layout_below="@+id/MyList"/>
-
-                                                                                                                                                                                                                    android:layout_below="@+id/textView" />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="20dp"
-        android:src="@drawable/add"
-        android:backgroundTint="#00BCD4"/>
-
-    <TextView
-        android:id="@+id/MyList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/buttonContainer"
-        android:paddingTop="10dp"
-        android:layout_marginStart="40dp"
-        android:text="My List"
-        android:textColor="#000000"
-        android:textSize="30dp"
         android:textStyle="bold" />
 
-
+    <!-- Budget + Expenses Container -->
     <LinearLayout
         android:id="@+id/buttonContainer"
         android:layout_width="match_parent"
@@ -108,8 +71,6 @@
                 android:textColor="#555555"
                 android:textSize="18dp"
                 android:textStyle="bold" />
-
-
         </RelativeLayout>
 
         <RelativeLayout
@@ -137,7 +98,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="-4dp"
                 android:paddingRight="3dp"
-                android:text="0"
+                android:text="0.00"
                 android:textColor="#000000"
                 android:textSize="35dp"
                 android:textStyle="bold" />
@@ -148,14 +109,62 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentBottom="true"
-                android:text="Expanses"
+                android:text="Expenses"
                 android:textColor="#555555"
                 android:textSize="18dp"
                 android:textStyle="bold" />
-
-
         </RelativeLayout>
-
     </LinearLayout>
 
+
+    <Spinner
+        android:id="@+id/spinner_lists"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/buttonContainer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+
+    <Button
+        android:id="@+id/button_add_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New list"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_margin="20dp" />
+
+    <!-- Label "My List" -->
+    <TextView
+        android:id="@+id/MyList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/spinner_lists"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="40dp"
+        android:text="My List"
+        android:textColor="#000000"
+        android:textSize="30dp"
+        android:textStyle="bold" />
+
+    <!-- RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/MyList"
+        android:layout_marginTop="10dp"
+        android:nestedScrollingEnabled="true" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="20dp"
+        android:src="@drawable/add"
+        android:backgroundTint="#00BCD4" />
 </RelativeLayout>

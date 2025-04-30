@@ -24,8 +24,6 @@ import com.example.bkyujk.Model.ShoppingListModel;
 import com.example.bkyujk.Utils.DataBaseHelper;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import com.example.bkyujk.Category; // Import pour Category
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,44 +42,50 @@ public class AddNewElem extends BottomSheetDialogFragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.add_new_element, container, false);
-        return v;
+        return inflater.inflate(R.layout.add_new_element, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        mEditText = (AutoCompleteTextView) view.findViewById(R.id.editText);
+        mEditText = view.findViewById(R.id.editText);
         mSaveButton = view.findViewById(R.id.addButton);
 
         myDB = new DataBaseHelper(getActivity());
 
-        // list all products to autocompletion
+        // Autocomplétion des produits
         List<String> allProducts = new ArrayList<>(Category.GAA_hurling());
         ArrayAdapter<String> adapterAuto = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, allProducts);
         mEditText.setAdapter(adapterAuto);
         mEditText.setThreshold(1);
 
         boolean isUpdate = false;
+        int listId = -1;
+        int itemId = -1;
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            isUpdate = true;
-            String element = bundle.getString("element");
-            mEditText.setText(element);
+            listId = bundle.getInt("listId", -1); // 👈 récupération du listId
+            if (bundle.containsKey("element") && bundle.containsKey("ID")) {
+                isUpdate = true;
+                itemId = bundle.getInt("ID");
+                String element = bundle.getString("element");
+                mEditText.setText(element);
 
-            if (element.length() > 0) {
-                mSaveButton.setEnabled(false);
+                if (element.length() > 0) {
+                    mSaveButton.setEnabled(false);
+                }
             }
         }
 
-        mEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        final int finalListId = listId;
+        final boolean finalIsUpdate = isUpdate;
+        final int finalItemId = itemId;
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        mEditText.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().trim().isEmpty()) {
                     mSaveButton.setEnabled(false);
                     mSaveButton.setBackgroundColor(Color.GRAY);
@@ -89,60 +93,62 @@ public class AddNewElem extends BottomSheetDialogFragment {
                     mSaveButton.setEnabled(true);
                 }
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
+            @Override public void afterTextChanged(Editable s) {}
         });
 
-        boolean finalIsUpdate = isUpdate;
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String rawText = mEditText.getText().toString().trim();
+        mSaveButton.setOnClickListener(v -> {
+            String rawText = mEditText.getText().toString().trim();
+            final String text = capitalizeFirstLetter(rawText);
 
+            if (finalIsUpdate) {
+                // 👉 mise à jour complète : texte + catégorie
+                String category = Category.getCategoryForItem(text);
+                ShoppingListModel updated = new ShoppingListModel();
+                updated.setId(finalItemId);
+                updated.setElement(text);
+                updated.setStatus(0);
+                updated.setCategory(category);
+                updated.setListId(finalListId);
+                updated.setPrice(Category.getPriceForItem(text));
+                myDB.updateElement(updated);
+                dismiss();
+                return;
+            }
 
-                final String text = capitalizeFirstLetter(rawText);
+            ShoppingListModel elem = new ShoppingListModel();
+            elem.setElement(text);
+            elem.setStatus(0);
+            elem.setListId(finalListId);
 
-                if (finalIsUpdate) {
-                    myDB.updateElement(bundle.getInt("ID"), text);
-                } else {
-                    ShoppingListModel elem = new ShoppingListModel();
-                    elem.setElement(text);
-                    elem.setStatus(0);
+            String category = Category.getCategoryForItem(text);
+            if (category.equals("Autres")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("What's the price for it?");
 
-                    String category = Category.getCategoryForItem(text);
-                    if (category.equals("Autres")) {
-                        // then ask the price
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("What's the price fo it?");
+                final EditText input = new EditText(getContext());
+                input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                builder.setView(input);
 
-                        final EditText input = new EditText(getContext());
-                        input.setInputType(
-                                InputType.TYPE_CLASS_NUMBER |
-                                InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                        builder.setView(input);
+                builder.setPositiveButton("OK", (dialog, which) -> {
+                    try {
+                        double price = Double.parseDouble(input.getText().toString());
+                        Category.OQTF(text, price);
 
-                        builder.setPositiveButton("OK", (dialog, which) -> {
-                            try {
-                                double price = Double.parseDouble(input.getText().toString());
-                                //save
-                                Category.OQTF(text, price);
-
-                                elem.setCategory("Autres");
-                                myDB.insertElement(elem);
-                                dismiss();
-                            } catch (NumberFormatException e) {
-                                Toast.makeText(getContext(), "Invalid number", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
-                        builder.show();
-                    } else {
-                        elem.setCategory(category);
+                        elem.setCategory("Autres");
+                        elem.setPrice(price);
                         myDB.insertElement(elem);
                         dismiss();
+                    } catch (NumberFormatException e) {
+                        Toast.makeText(getContext(), "Invalid number", Toast.LENGTH_SHORT).show();
                     }
-                }
+                });
+                builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+                builder.show();
+            } else {
+                elem.setCategory(category);
+                elem.setPrice(Category.getPriceForItem(text));
+                myDB.insertElement(elem);
+                dismiss();
             }
         });
     }
@@ -156,11 +162,9 @@ public class AddNewElem extends BottomSheetDialogFragment {
         }
     }
 
-
     private String capitalizeFirstLetter(String input) {
-        if (input == null || input.isEmpty()) {
-            return input;
-        }
+        if (input == null || input.isEmpty()) return input;
         return input.substring(0, 1).toUpperCase() + input.substring(1).toLowerCase();
     }
 }
+

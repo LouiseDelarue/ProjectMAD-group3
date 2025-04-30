@@ -41,7 +41,8 @@ public class ExpensesDialog extends BottomSheetDialogFragment {
 
         // Display what's in the list
         DataBaseHelper myDB = new DataBaseHelper(getContext());
-        List<ShoppingListModel> list = myDB.getAllElements();
+        int listId = getArguments().getInt("listId", -1);
+        List<ShoppingListModel> list = myDB.getElementsByListId(listId);
 
         if (list.isEmpty()) { // no more gone
             emptyListText.setVisibility(View.VISIBLE);

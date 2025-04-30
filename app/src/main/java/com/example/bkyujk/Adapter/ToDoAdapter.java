@@ -87,6 +87,8 @@ public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.MyViewHolder  
         notifyItemRemoved(position);
     }
 
+
+
     public void editElement(int position)
     {
         ShoppingListModel elem = mList.get(position);

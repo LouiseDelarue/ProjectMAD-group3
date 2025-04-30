@@ -6,6 +6,17 @@ public class ShoppingListModel {
     private int id, status;
     private String category;
     private double price;
+
+    private int listId;
+
+    public int getListId() {
+        return listId;
+    }
+
+    public void setListId(int listId) {
+        this.listId = listId;
+    }
+
     public String getElement() {
         return element;
     }
@@ -42,12 +53,13 @@ public class ShoppingListModel {
 
     public void setCategory(String category) { this.category = category; }
 
-    public ShoppingListModel(int id, String element, int status, String category, double price) {
+    public ShoppingListModel(int id, String element, int status, String category, double price, int listId) {
         this.id = id;
         this.element = element;
         this.status = status;
         this.category = category;
         this.price = price;
+        this.listId = listId;
     }
     public ShoppingListModel() {
         // Constructeur vide pour l’usage en base de données

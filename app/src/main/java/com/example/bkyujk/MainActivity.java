@@ -5,8 +5,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +29,7 @@ import com.example.bkyujk.Model.ShoppingListModel;
 import com.example.bkyujk.Utils.DataBaseHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,23 +43,33 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
     private ToDoAdapter adapter;
     private TextView value2;
 
+    Spinner spinner;
+    String selectedListName;
+    int selectedListId = -1;
+
+    Button addListButton;
+
+    List<String> listNames;
+    ArrayAdapter<String> adapterSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
         setContentView(R.layout.activity_main);
 
+        // Views
         RelativeLayout budgetContainer = findViewById(R.id.budgetContainer);
         RelativeLayout expensesContainer = findViewById(R.id.enpensesContainer);
-
         TextView value1 = findViewById(R.id.value1);
-
+        value2 = findViewById(R.id.value2);
+        spinner = findViewById(R.id.spinner_lists);
+        addListButton = findViewById(R.id.button_add_list);
 
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
         String saveBudget = prefs.getString("budget", null);
         if (saveBudget != null) {
-            value1.setText((saveBudget));
+            value1.setText(saveBudget);
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -69,67 +80,117 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
         recyclerView = findViewById(R.id.recyclerView);
         addButton = findViewById(R.id.addButton);
-
-
         myDB = new DataBaseHelper(MainActivity.this);
         mList = new ArrayList<>();
         adapter = new ToDoAdapter(myDB, MainActivity.this);
-
-        value2 = findViewById(R.id.value2);
-        updateExpenses(value2);
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
-        mList = myDB.getAllElements();
-        Collections.reverse(mList);
-        adapter.setElements(mList);
+        // Init lists and spinner
+        listNames = myDB.getAllListNames();
+        if (listNames.isEmpty()) {
+            myDB.insertList("My List");
+            listNames = myDB.getAllListNames();
+        }
 
+        adapterSpinner = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, listNames);
+        adapterSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapterSpinner);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
+        selectedListName = listNames.get(0);
+        selectedListId = myDB.getListIdByName(selectedListName);
+        loadListForSelectedId();
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                AddNewElem.newInstance().show(getSupportFragmentManager(), AddNewElem.TAG);
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedListName = parent.getItemAtPosition(position).toString();
+                selectedListId = myDB.getListIdByName(selectedListName);
+                loadListForSelectedId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
-        // Edit budget
+        addListButton.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Name of the new list");
+
+            final EditText input = new EditText(MainActivity.this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+
+            builder.setPositiveButton("Create", (dialog, which) -> {
+                String newListName = input.getText().toString().trim();
+                if (!newListName.isEmpty()) {
+                    if (!listNames.contains(newListName)) {
+                        myDB.insertList(newListName);
+
+                        listNames.clear();
+                        listNames.addAll(myDB.getAllListNames());
+                        adapterSpinner.notifyDataSetChanged();
+
+                        int index = listNames.indexOf(newListName);
+                        if (index >= 0) {
+                            spinner.setSelection(index);
+                        }
+
+                        Toast.makeText(MainActivity.this, "List added", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(MainActivity.this, "this name aldready exist.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(MainActivity.this, "Entrer a valid name.", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            builder.show();
+        });
+
+        addButton.setOnClickListener(view -> {
+            AddNewElem addNewElem = AddNewElem.newInstance();
+            Bundle bundle = new Bundle();
+            bundle.putInt("listId", selectedListId);
+            addNewElem.setArguments(bundle);
+            addNewElem.show(getSupportFragmentManager(), AddNewElem.TAG);
+        });
+
         budgetContainer.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
             builder.setTitle("Enter your budget");
 
             final EditText input = new EditText(MainActivity.this);
-            input.setInputType(
-                    InputType.TYPE_CLASS_NUMBER |
-                    InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             builder.setView(input);
 
             builder.setPositiveButton("OK", (dialog, which) -> {
                 String enteredValue = input.getText().toString();
-                try { //verif si budget >0
+                try {
                     double budget = Double.parseDouble(enteredValue);
-                    if (budget>0) {
+                    if (budget > 0) {
                         value1.setText(enteredValue);
                         SharedPreferences.Editor editor = prefs.edit();
                         editor.putString("budget", enteredValue);
                         editor.apply();
                         andrewTate();
                     } else {
-                        Toast.makeText(MainActivity.this, "PLease enter a value greater than 0.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Please enter a value greater than 0.", Toast.LENGTH_SHORT).show();
                     }
                 } catch (NumberFormatException e) {
-                    Toast.makeText(MainActivity.this, "invalid number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Invalid number", Toast.LENGTH_SHORT).show();
                 }
             });
             builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
             builder.show();
         });
 
-        // Edit expenses
         expensesContainer.setOnClickListener(v -> {
             String message = "Expenses Detail";
-
             ExpensesDialog.newInstance(message).show(getSupportFragmentManager(), "ExpensesDialog");
         });
 
@@ -137,17 +198,21 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         itemTouchHelper.attachToRecyclerView(recyclerView);
     }
 
-    @Override
-    public void onDialogClose(DialogInterface dialogInterface) {
-        mList = myDB.getAllElements();
+    private void loadListForSelectedId() {
+        mList = myDB.getElementsByListId(selectedListId);
         Collections.reverse(mList);
         adapter.setElements(mList);
-        adapter.notifyDataSetChanged();
         updateExpenses(value2);
     }
 
+    @Override
+    public void onDialogClose(DialogInterface dialogInterface) {
+        loadListForSelectedId();
+        adapter.notifyDataSetChanged();
+    }
+
     public void updateExpenses(TextView value2) {
-        List<ShoppingListModel> list = myDB.getAllElements();
+        List<ShoppingListModel> list = myDB.getElementsByListId(selectedListId);
         double total = 0.0;
         for (ShoppingListModel item : list) {
             total += Category.getPriceForItem(item.getElement());
@@ -157,14 +222,11 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
     }
 
     public void refreshUI() {
-        mList = myDB.getAllElements();
-        Collections.reverse(mList);
-        adapter.setElements(mList);
+        loadListForSelectedId();
         adapter.notifyDataSetChanged();
-        updateExpenses(value2);
     }
 
-    private void andrewTate() { // expenses become red if poor budget
+    private void andrewTate() {
         TextView value1 = findViewById(R.id.value1);
         TextView value2 = findViewById(R.id.value2);
 
@@ -174,8 +236,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
             if (expenses > budget) {
                 value2.setTextColor(getResources().getColor(android.R.color.holo_red_light));
-                String message = String.format("Please add %.2f€ to your budget.", expenses-budget);
-                // please add XX euro
+                String message = String.format("Please add %.2f€ to your budget.", expenses - budget);
                 new AlertDialog.Builder(MainActivity.this)
                         .setTitle("Budget exceeded")
                         .setMessage(message)
@@ -189,11 +250,3 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         }
     }
 }
-
-
-
-
-
-
-
-
