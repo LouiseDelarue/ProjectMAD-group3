@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
     int selectedListId = -1;
 
     Button addListButton;
+    Button deleteListButton;
 
     List<String> listNames;
     ArrayAdapter<String> adapterSpinner;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         value2 = findViewById(R.id.value2);
         spinner = findViewById(R.id.spinner_lists);
         addListButton = findViewById(R.id.button_add_list);
+        deleteListButton = findViewById(R.id.button_delete_list);
 
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
         String saveBudget = prefs.getString("budget", null);
@@ -141,14 +143,42 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
 
                         Toast.makeText(MainActivity.this, "List added", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(MainActivity.this, "this name aldready exist.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "This name already exist", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Entrer a valid name.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Entrer a name", Toast.LENGTH_SHORT).show();
                 }
             });
 
             builder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+            builder.show();
+        });
+
+        deleteListButton.setOnClickListener(v -> {
+            if (listNames.size() <= 1) {
+                Toast.makeText(MainActivity.this, "Impossible to delete the last list", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            builder.setTitle("Delete list ?");
+            builder.setMessage("This will also delete all associated elements.");
+            builder.setPositiveButton("Delete", (dialog, which) -> {
+                myDB.deleteListById(selectedListId);
+
+                listNames.clear();
+                listNames.addAll(myDB.getAllListNames());
+                adapterSpinner.notifyDataSetChanged();
+
+                selectedListName = listNames.get(0);
+                selectedListId = myDB.getListIdByName(selectedListName);
+                spinner.setSelection(0);
+                loadListForSelectedId();
+
+                Toast.makeText(MainActivity.this, "List deleted", Toast.LENGTH_SHORT).show();
+            });
+
+            builder.setNegativeButton("Cancelled", (dialog, which) -> dialog.dismiss());
             builder.show();
         });
 

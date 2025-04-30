@@ -258,6 +258,21 @@ public class Category {
         addMapping("chocolatine", "Grocery", 1.5f);
         addMapping("donut", "Grocery", 1.0f);
         addMapping("cookies", "Grocery", 2.0f);
+        addMapping("coke", "Grocery", 1.5f);
+        addMapping("sprite", "Grocery", 1.5f);
+        addMapping("fanta", "Grocery", 1.5f);
+        addMapping("pepsi", "Grocery", 1.5f);
+        addMapping("red bull", "Grocery", 0.99f);
+        addMapping("monster", "Grocery", 0.99f);
+        addMapping("orangina", "Grocery", 1.5f);
+        addMapping("7up", "Grocery", 1.5f);
+        addMapping("orange juice", "Grocery", 1.0f);
+        addMapping("apple juice", "Grocery", 1.0f);
+        addMapping("grape juice", "Grocery", 1.0f);
+        addMapping("water", "Grocery", 0.99f);
+        addMapping("sparkling water", "Grocery", 0.99f);
+
+
 
         // Frozen
         addMapping("ice cream", "Frozen", 5.0f);

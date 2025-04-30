@@ -149,5 +149,15 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.delete("Shopping_TABLE", "ID=?", new String[]{String.valueOf(id)});
     }
 
+    public void deleteListById(int listId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Supprimer tous les éléments de cette liste
+        db.delete("Shopping_TABLE", "LIST_ID = ?", new String[]{String.valueOf(listId)});
+
+        // Supprimer la liste elle-même
+        db.delete("Lists_TABLE", "LIST_ID = ?", new String[]{String.valueOf(listId)});
+    }
+
     // Autres méthodes (update, delete) restent les mêmes
 }
