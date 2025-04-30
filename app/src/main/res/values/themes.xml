@@ -9,5 +9,7 @@
 
     <style name="ScreenBackground"><item name="background">@color/white</item></style>
     <style name="CardBackground"><item name="background">@color/white</item></style>
-    <style name="TextColor"><item name="android:textColor">@color/lavender</item></style>
+    <style name="TextColor"><item name="android:textColor">@color/black</item></style>
+    <style name="TextColor2"><item name="android:textColor">@color/strangeGray</item></style>
+
 </resources>
