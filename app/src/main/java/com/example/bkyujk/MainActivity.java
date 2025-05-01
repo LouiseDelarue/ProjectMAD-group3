@@ -40,7 +40,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements OnDialogCloseListener {
 
     RecyclerView recyclerView;
-    FloatingActionButton addButton;
+    TextView addButton;
     DataBaseHelper myDB;
 
     private List<ShoppingListModel> mList;
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
     String selectedListName;
     int selectedListId = -1;
 
-    Button addListButton;
+    TextView addListButton;
     Button deleteListButton;
 
     List<String> listNames;
@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         TextView value1 = findViewById(R.id.value1);
         value2 = findViewById(R.id.value2);
         spinner = findViewById(R.id.spinner_lists);
-        addListButton = findViewById(R.id.button_add_list);
+        addListButton = (TextView) findViewById(R.id.button_add_list);
         deleteListButton = findViewById(R.id.button_delete_list);
 
         SharedPreferences prefs = getSharedPreferences("myPrefs", MODE_PRIVATE);
@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         });
 
         recyclerView = findViewById(R.id.recyclerView);
-        addButton = findViewById(R.id.addButton);
+        addButton = (TextView) findViewById(R.id.addButton);
         myDB = new DataBaseHelper(MainActivity.this);
         mList = new ArrayList<>();
         adapter = new ToDoAdapter(myDB, MainActivity.this);
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                         Toast.makeText(MainActivity.this, "This name already exist", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Entrer a name", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Enter a name", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -188,7 +188,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                 Toast.makeText(MainActivity.this, "List deleted", Toast.LENGTH_SHORT).show();
             });
 
-            builder.setNegativeButton("Cancelled", (dialog, which) -> dialog.dismiss());
+            builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
             builder.show();
         });
 
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
         doneButton.setOnClickListener(v -> {
             List<ShoppingListModel> list = myDB.getElementsByListId(selectedListId);
 
-            // not done
+            // no items at all
             if (list.isEmpty()) {
                 Toast.makeText(MainActivity.this, "Your list is empty.", Toast.LENGTH_SHORT).show();
                 return;
@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                         .setMessage(message)
                         .setPositiveButton("OK", null)
                         .show();
-            } else {
+            } else { // not done
                 StringBuilder sb = new StringBuilder("Some items are missing:\n");
                 for (ShoppingListModel item : notCheck) {
                     sb.append("  - ").append(item.getElement())

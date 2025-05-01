@@ -126,26 +126,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" />
 
-    <Button
-    android:id="@+id/button_delete_list"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Delete list"
-    android:layout_alignParentBottom="true"
-    android:layout_centerHorizontal="true"
-    android:layout_marginBottom="20dp" />
-
-
-    <Button
-        android:id="@+id/button_add_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="New list"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_margin="20dp" />
-
-    <!-- "My List" + "Done" -->
+    <!-- "My List" + "Done" + "Delete" -->
     <LinearLayout
         android:id="@+id/MyList_Done"
         android:layout_width="match_parent"
@@ -168,6 +149,7 @@
             android:textSize="30dp"
             android:textStyle="bold" />
 
+        <!-- list done -->
         <Button
             android:id="@+id/button_done"
             android:layout_width="80dp"
@@ -175,6 +157,18 @@
             android:text="Done"
             android:textSize="14dp"
             android:backgroundTint="@color/green"
+            android:layout_marginEnd="10dp"
+            android:padding="1dp" />
+
+        <!-- delete list -->
+        <Button
+            android:id="@+id/button_delete_list"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:text="Delete"
+            android:textSize="14dp"
+            android:backgroundTint="@color/red"
+            android:layout_marginStart="10dp"
             android:padding="1dp" />
     </LinearLayout>
 
@@ -190,17 +184,6 @@
         android:nestedScrollingEnabled="true" />
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_margin="20dp"
-        android:src="@drawable/add"
-        android:backgroundTint="#00BCD4" />
-
-
     <androidx.appcompat.widget.SwitchCompat
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -209,6 +192,35 @@
         android:layout_marginBottom="10dp"
         android:thumb="@drawable/thumb"
         app:track="@drawable/track"
-
         />
+
+
+    <!-- new item -->
+    <TextView
+        android:id="@+id/addButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:text="Add Item"
+        android:textSize="20dp"
+        android:textColor="#0f63f5"
+        android:textStyle="bold"
+        android:gravity="center" />
+
+    <!-- New list -->
+    <TextView
+        android:id="@+id/button_add_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="20dp"
+        android:text="New list"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:textColor="#0f63f5"
+        android:gravity="center" />
+
 </RelativeLayout>
