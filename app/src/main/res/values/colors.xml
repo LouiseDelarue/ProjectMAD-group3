@@ -8,4 +8,6 @@
     <color name="strangeGray">#787171</color>
     <color name="grey">#aaa</color>
     <color name="darkGrey">#332F2F</color>
+    <color name="backGrey">#DEDEDE</color>
+
 </resources>
