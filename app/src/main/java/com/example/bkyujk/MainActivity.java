@@ -3,6 +3,7 @@ package com.example.bkyujk;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.ShortcutInfo;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -254,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                     editor = sharedPreferences.edit();
                     editor.putBoolean("nightMode",false);
 
-                }else {
+                } else {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     editor = sharedPreferences.edit();
                     editor.putBoolean("nightMode",true);
@@ -263,8 +264,50 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
             }
         });
 
+        Button doneButton = findViewById(R.id.button_done);
+        doneButton.setOnClickListener(v -> {
+            List<ShoppingListModel> list = myDB.getElementsByListId(selectedListId);
 
+            // not done
+            if (list.isEmpty()) {
+                Toast.makeText(MainActivity.this, "Your list is empty.", Toast.LENGTH_SHORT).show();
+                return;
+            }
 
+            List<ShoppingListModel> notCheck = new ArrayList<>();
+            int cmp = 0;
+            double total = 0.0;
+
+            for (ShoppingListModel item : list) {
+                if (item.getStatus() != 1) {
+                    notCheck.add(item);
+                } else {
+                    cmp++;
+                    total += item.getPrice();
+                }
+            }
+
+            // clic done -> positive
+            if (notCheck.isEmpty()) {
+                String message = String.format("%d items for a total of %.2f€", cmp, total);
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Your are all good")
+                        .setMessage(message)
+                        .setPositiveButton("OK", null)
+                        .show();
+            } else {
+                StringBuilder sb = new StringBuilder("Some items are missing:\n");
+                for (ShoppingListModel item : notCheck) {
+                    sb.append("  - ").append(item.getElement())
+                            .append("\n");
+                }
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Remaining items")
+                        .setMessage(sb.toString())
+                        .setPositiveButton("OK", null)
+                        .show();
+            }
+        });
     }
 
     private void loadListForSelectedId() {

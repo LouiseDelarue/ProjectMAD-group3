@@ -31,8 +31,8 @@
         android:paddingEnd="1dp"
         android:gravity="center"
         android:weightSum="2">
-        <RelativeLayout
 
+        <RelativeLayout
             android:id="@+id/budgetContainer"
             android:layout_width="0dp"
             android:layout_height="90dp"
@@ -133,8 +133,7 @@
     android:text="Delete list"
     android:layout_alignParentBottom="true"
     android:layout_centerHorizontal="true"
-    android:layout_marginBottom="20dp"/>
-
+    android:layout_marginBottom="20dp" />
 
 
     <Button
@@ -146,25 +145,47 @@
         android:layout_alignParentStart="true"
         android:layout_margin="20dp" />
 
-    <!-- Label "My List" -->
-    <TextView
-        android:id="@+id/MyList"
-        android:layout_width="wrap_content"
+    <!-- "My List" + "Done" -->
+    <LinearLayout
+        android:id="@+id/MyList_Done"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/spinner_lists"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="40dp"
-        android:text="My List"
-        style="@style/TextColor"
-        android:textSize="30dp"
-        android:textStyle="bold" />
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Label "My List" -->
+        <TextView
+            android:id="@+id/MyList"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="My List"
+            style="@style/TextColor"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/button_done"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:text="Done"
+            android:textSize="14dp"
+            android:backgroundTint="@color/green"
+            android:padding="1dp" />
+    </LinearLayout>
+
+
 
     <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/MyList"
+        android:layout_below="@id/MyList_Done"
         android:layout_marginTop="10dp"
         android:nestedScrollingEnabled="true" />
 
