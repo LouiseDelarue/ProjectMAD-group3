@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.ShortcutInfo;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -356,7 +358,12 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
                         .setPositiveButton("OK", (dialog, which) -> dialog.dismiss())
                         .show();
             } else {
-                value2.setTextColor(getResources().getColor(android.R.color.black));
+                //value2.setTextColor(getResources().getColor(android.R.color.black));
+                TypedArray a = getTheme().obtainStyledAttributes(R.style.TextColor, new int[]{android.R.attr.textColor});
+                int color = a.getColor(0, Color.BLACK); // Valeur par défaut = noir
+                a.recycle();
+
+                value2.setTextColor(color);
             }
         } catch (NumberFormatException e) {
             value2.setTextColor(getResources().getColor(android.R.color.black));
