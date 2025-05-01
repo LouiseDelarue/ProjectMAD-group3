@@ -8,6 +8,8 @@
     <style name="Theme.Bkyujk" parent="Base.Theme.Bkyujk" />
 
     <style name="ScreenBackground"><item name="background">@color/black</item></style>
-    <style name="CardBackground"><item name="background">@color/darkGrey</item></style>
+    <style name="CardBackground"><item name="background">@color/strangeGray</item></style>
     <style name="TextColor"><item name="android:textColor">@color/grey</item></style>
+    <style name="TextColor2"><item name="android:textColor">@color/grey</item></style>
+    <style name="CornerLight"><item name="android:background">@drawable/rounded_corner_for_btn_black</item></style>
 </resources>

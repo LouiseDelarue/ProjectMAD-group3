@@ -287,6 +287,7 @@ public class MainActivity extends AppCompatActivity implements OnDialogCloseList
             total += Category.getPriceForItem(item.getElement());
         }
         value2.setText(String.format("%.2f", total));
+
         andrewTate();
     }
 
